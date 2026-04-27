@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InfoAiedge | Internal Nexus</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-main: #020203;
+            --bg-sidebar: #050506;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --accent: #00f2fe;
+            --accent-gradient: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+            --border: rgba(255, 255, 255, 0.08);
+            --glass-blur: blur(12px);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* --- Sidebar --- */
+        .sidebar {
+            width: 280px;
+            background: var(--bg-sidebar);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            padding: 2rem 1.5rem;
+        }
+
+        .logo {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 3rem;
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .logo span { color: var(--accent); }
+
+        .nav-menu { list-style: none; flex: 1; }
+
+        .nav-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.8rem 1rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            border-radius: 12px;
+            transition: 0.3s;
+            font-weight: 500;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: var(--bg-card);
+            color: #fff;
+        }
+
+        .nav-link i { width: 20px; text-align: center; font-size: 1.1rem; }
+
+        .user-profile {
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--accent-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #000;
+        }
+
+        /* --- Main Content --- */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem 3%;
+            overflow-y: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 { font-family: 'Outfit', sans-serif; font-size: 2rem; }
+
+        .search-root {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 0.6rem 1.2rem;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            width: 400px;
+        }
+
+        .search-root input {
+            background: none;
+            border: none;
+            color: #fff;
+            outline: none;
+            width: 100%;
+        }
+
+        /* --- Grid Modules --- */
+        .grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        .module-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 2rem;
+            backdrop-filter: var(--glass-blur);
+        }
+
+        .module-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        /* --- Mail Module --- */
+        .mail-list { list-style: none; }
+        .mail-item {
+            padding: 1rem;
+            border-radius: 12px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            gap: 1.5rem;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+        .mail-item:hover { background: rgba(255,255,255,0.05); }
+        .mail-sender { font-weight: 700; width: 120px; overflow: hidden; text-overflow: ellipsis; }
+        .mail-subject { font-weight: 600; color: #fff; }
+        .mail-snippet { color: var(--text-muted); font-size: 0.9rem; margin-top: 4px; }
+
+        /* --- Chat Module --- */
+        .chat-container {
+            height: 400px;
+            display: flex;
+            flex-direction: column;
+        }
+        .messages-area {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 1rem;
+            padding-right: 10px;
+        }
+        .message-bubble {
+            max-width: 80%;
+            padding: 0.8rem 1.2rem;
+            border-radius: 16px;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+        .msg-received { background: var(--bg-card); align-self: flex-start; }
+        .msg-sent { background: var(--accent); color: #000; align-self: flex-end; }
+
+        .chat-input {
+            display: flex;
+            gap: 10px;
+        }
+        .chat-input input {
+            flex: 1;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid var(--border);
+            padding: 0.8rem;
+            border-radius: 10px;
+            color: #fff;
+        }
+
+        /* --- Hierarchy Module --- */
+        .org-tree {
+            padding: 1rem;
+        }
+        .org-node {
+            padding: 0.8rem;
+            border-left: 2px solid var(--accent);
+            margin-bottom: 1rem;
+            margin-left: 1rem;
+            background: rgba(0, 242, 254, 0.05);
+            border-radius: 0 10px 10px 0;
+        }
+        .org-node.ceo { border-left-color: #ff00ff; background: rgba(255, 0, 255, 0.05); margin-left: 0; }
+        .node-name { font-weight: 700; color: #fff; }
+        .node-role { font-size: 0.8rem; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; }
+
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <a href="#" class="logo">INFO<span>AIEDGE</span></a>
+        
+        <ul class="nav-menu">
+            <li class="nav-item"><a href="#" class="nav-link active"><i class="fas fa-home"></i> Dashboard</a></li>
+            <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-envelope"></i> Internal Mail</a></li>
+            <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-comments"></i> Team Chat</a></li>
+            <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-sitemap"></i> Hierarchy</a></li>
+            <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-tasks"></i> Projects</a></li>
+            <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-chart-line"></i> Performance</a></li>
+        </ul>
+
+        <div class="user-profile">
+            <div class="avatar">S</div>
+            <div>
+                <p style="font-weight: 600; font-size: 0.9rem;">Suryavamsi</p>
+                <p style="font-size: 0.75rem; color: var(--text-muted);">CEO & Founder</p>
+            </div>
+            <a href="/logout" style="margin-left: auto; color: var(--text-muted);"><i class="fas fa-sign-out-alt"></i></a>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <div class="header">
+            <div>
+                <h1>Internal Nexus</h1>
+                <p style="color: var(--text-muted);">Welcome back, Commander.</p>
+            </div>
+            <div class="search-root">
+                <i class="fas fa-search" style="color: var(--text-muted);"></i>
+                <input type="text" placeholder="Search employees, files, or tasks...">
+            </div>
+        </div>
+
+        <div class="grid">
+            <!-- Mail & Dashboard Overview -->
+            <section class="module-card">
+                <div class="module-header">
+                    <h3>Recent Internal Communications</h3>
+                    <button style="background: none; border: none; color: var(--accent); cursor: pointer;">Compose <i class="fas fa-plus"></i></button>
+                </div>
+                <div class="mail-list">
+                    <div class="mail-item">
+                        <div class="mail-sender">Engineering Team</div>
+                        <div>
+                            <p class="mail-subject">Update: Sentinel v2.4 Deployment</p>
+                            <p class="mail-snippet">We've successfully migrated the primary database schemas. No downtime recorded...</p>
+                        </div>
+                    </div>
+                    <div class="mail-item">
+                        <div class="mail-sender">HR Nexus</div>
+                        <div>
+                            <p class="mail-subject">New Engineer Onboarding: Alex</p>
+                            <p class="mail-snippet">Please welcome Alex to the Cloud Architecture team starting next Monday.</p>
+                        </div>
+                    </div>
+                    <div class="mail-item">
+                        <div class="mail-sender">SysAdmin</div>
+                        <div>
+                            <p class="mail-subject">Scheduled Infrastructure Maintenance</p>
+                            <p class="mail-snippet">Routine patching for AWS EKS nodes is scheduled for Sunday 2 AM UTC.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Org Hierarchy -->
+            <section class="module-card">
+                <div class="module-header">
+                    <h3>Organization</h3>
+                </div>
+                <div class="org-tree">
+                    <div class="org-node ceo">
+                        <p class="node-name">Suryavamsi</p>
+                        <p class="node-role">Chief Executive Officer</p>
+                    </div>
+                    <div class="org-node">
+                        <p class="node-name">Engineering Lead</p>
+                        <p class="node-role">Backend Architecture</p>
+                    </div>
+                    <div class="org-node" style="margin-left: 2rem;">
+                        <p class="node-name">Senior Dev 1</p>
+                        <p class="node-role">Go Engineer</p>
+                    </div>
+                    <div class="org-node" style="margin-left: 2rem;">
+                        <p class="node-name">Senior Dev 2</p>
+                        <p class="node-role">Cloud Infrastructure</p>
+                    </div>
+                    <div class="org-node">
+                        <p class="node-name">Operations Lead</p>
+                        <p class="node-role">SRE & Compliance</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Chat Module -->
+            <section class="module-card" style="grid-column: 1 / -1;">
+                <div class="module-header">
+                    <h3>Engineering Channel</h3>
+                    <span style="font-size: 0.8rem; color: var(--accent);"><i class="fas fa-circle" style="font-size: 0.6rem;"></i> 4 Active</span>
+                </div>
+                <div class="chat-container">
+                    <div class="messages-area" id="chatArea">
+                        <div class="message-bubble msg-received">
+                            <strong>Lead Architect:</strong> Anyone checked the latency on the new gRPC gateway?
+                        </div>
+                        <div class="message-bubble msg-received">
+                            <strong>Dev_2:</strong> Running smooth. 12ms average.
+                        </div>
+                        <div class="message-bubble msg-sent" style="align-self: flex-end;">
+                            <strong>You:</strong> Excellent. Let's push to staging.
+                        </div>
+                    </div>
+                    <form class="chat-input" id="chatForm">
+                        <input type="text" placeholder="Message #engineering..." id="msgInput">
+                        <button class="btn btn-primary" style="padding: 0.5rem 1.5rem; border-radius: 10px;"><i class="fas fa-paper-plane"></i></button>
+                    </form>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        // Organization Hierarchy Data (Simulating hierarchi)
+        const hierarchy = [
+            { name: "Suryavamsi", role: "CEO & Founder", type: "ceo" },
+            { name: "Engineering Lead", role: "Architecture", type: "lead" },
+            { name: "Sr Dev 1", role: "Go Specialist", type: "staff" },
+            { name: "Sr Dev 2", role: "Cloud Infra", type: "staff" }
+        ];
+
+        // WebSocket & Chat Logic
+        const chatArea = document.getElementById('chatArea');
+        const chatForm = document.getElementById('chatForm');
+        const msgInput = document.getElementById('msgInput');
+        
+        let socket;
+        function connectWS() {
+            const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            socket = new WebSocket(`${protocol}//${window.location.host}/ws`);
+            
+            socket.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                appendMessage(data.sender, data.message, data.sender === 'Suryavamsi' ? 'msg-sent' : 'msg-received');
+            };
+
+            socket.onclose = () => {
+                setTimeout(connectWS, 3000); // Reconnect
+            };
+        }
+
+        function appendMessage(sender, message, type) {
+            const div = document.createElement('div');
+            div.className = `message-bubble ${type}`;
+            if(type === 'msg-sent') div.style.alignSelf = 'flex-end';
+            div.innerHTML = `<strong>${sender}:</strong> ${message}`;
+            chatArea.appendChild(div);
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+
+        chatForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if(!msgInput.value || !socket) return;
+            
+            const msg = {
+                sender: 'Suryavamsi', // In real app, get from session
+                message: msgInput.value
+            };
+            socket.send(JSON.stringify(msg));
+            msgInput.value = '';
+        });
+
+        // Fetch Internal Emails
+        async function fetchEmails() {
+            try {
+                const res = await fetch('/api/employee/emails');
+                const emails = await res.json();
+                const list = document.querySelector('.mail-list');
+                if(emails && emails.length > 0) {
+                    list.innerHTML = emails.map(e => `
+                        <div class="mail-item">
+                            <div class="mail-sender">${e.from}</div>
+                            <div>
+                                <p class="mail-subject">${e.subject}</p>
+                                <p class="mail-snippet">${e.content}</p>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            } catch (err) { console.error("Mail fetch error:", err); }
+        }
+
+        connectWS();
+        fetchEmails();
+    </script>
+</body>
+</html>

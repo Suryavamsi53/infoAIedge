@@ -10,26 +10,6 @@
     "time": "2026-04-23T22:29:52.640710629+05:30"
   },
   {
-    "name": "Ssa",
-    "email": "dssd@gmail.com",
-    "phone": "9876543234",
-    "company": "sdfe",
-    "region": "Dubai",
-    "country": "UAE",
-    "message": "sdcdsvfdv",
-    "time": "2026-04-23T22:31:19.908974959+05:30"
-  },
-  {
-    "name": "Sandhya",
-    "email": "sandhya@gmail.com",
-    "phone": "9876543234",
-    "company": "Sandhya",
-    "region": "Karnataka",
-    "country": "India",
-    "message": "iouiyugcyfg vh",
-    "time": "2026-04-23T22:31:54.083914901+05:30"
-  },
-  {
     "name": "Suryavamsi vaggu",
     "email": "SuryavamsiVaggu@gmail.com",
     "phone": "9381827692",
@@ -110,16 +90,6 @@
     "time": "2026-04-23T22:31:19.908974959+05:30"
   },
   {
-    "name": "Sandhya",
-    "email": "sandhya@gmail.com",
-    "phone": "9876543234",
-    "company": "Sandhya",
-    "region": "Karnataka",
-    "country": "India",
-    "message": "iouiyugcyfg vh",
-    "time": "2026-04-23T22:31:54.083914901+05:30"
-  },
-  {
     "name": "Suryavamsi vaggu",
     "email": "SuryavamsiVaggu@gmail.com",
     "phone": "9381827692",
@@ -128,35 +98,5 @@
     "country": "India",
     "message": "Building an AI Eco-system ",
     "time": "2026-04-23T22:29:52.640710629+05:30"
-  },
-  {
-    "name": "Ssa",
-    "email": "dssd@gmail.com",
-    "phone": "9876543234",
-    "company": "sdfe",
-    "region": "Dubai",
-    "country": "UAE",
-    "message": "sdcdsvfdv",
-    "time": "2026-04-23T22:31:19.908974959+05:30"
-  },
-  {
-    "name": "Sandhya",
-    "email": "sandhya@gmail.com",
-    "phone": "9876543234",
-    "company": "Sandhya",
-    "region": "Karnataka",
-    "country": "India",
-    "message": "iouiyugcyfg vh",
-    "time": "2026-04-23T22:31:54.083914901+05:30"
-  },
-  {
-    "name": "Nirmala",
-    "email": "Nirmalahg@mphasis.com",
-    "phone": "9876543210",
-    "company": "Mphasis Ltd",
-    "region": "New york",
-    "country": "USA",
-    "message": "Backend-focused Go (Golang) developer with hands-on experience building scalable REST APIs, working with distributed systems, and handling production-level debugging. Strong foundation in concurrency (goroutines, channels), system design, and cloud-native technologies including Docker and Kubernetes. Passionate about building reliable, high-performance services and continuously improving system efficiency through observability and automation.",
-    "time": "2026-04-23T22:41:26.858361111+05:30"
   }
 ]

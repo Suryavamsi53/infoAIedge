@@ -376,12 +376,13 @@
         }
 
         async function deleteMessage(index) {
+            const msg = allMessages[index];
             if (!confirm("Are you sure you want to delete this transmission?")) return;
             try {
                 const resp = await fetch('api/messages/update', {
                     method: 'DELETE',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ index })
+                    body: JSON.stringify({ index, id: msg.id })
                 });
                 if (resp.ok) window.location.reload();
                 else alert("Failed to delete message: Server error.");

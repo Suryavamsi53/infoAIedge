@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/gorilla/websocket"
 	_ "github.com/lib/pq"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -23,7 +24,33 @@ var (
 	messagesFile = "messages.json"
 	mu           sync.Mutex
 	db           *sql.DB
+	upgrader     = websocket.Upgrader{
+		CheckOrigin: func(r *http.Request) bool { return true },
+	}
+	clients = make(map[*websocket.Conn]bool)
+	broadcast = make(chan ChatMessage)
 )
+
+type ChatMessage struct {
+	Sender  string `json:"sender"`
+	Message string `json:"message"`
+	Time     time.Time `json:"time"`
+}
+
+type InternalEmail struct {
+	ID      int       `json:"id"`
+	From    string    `json:"from"`
+	Subject string    `json:"subject"`
+	Content string    `json:"content"`
+	Time    time.Time `json:"time"`
+}
+
+type User struct {
+	ID           int    `json:"id"`
+	Username     string `json:"username"`
+	PasswordHash string `json:"-"`
+	Role         string `json:"role"`
+}
 
 func init() {
 	secret := os.Getenv("JWT_SECRET")
@@ -62,7 +89,8 @@ func init() {
 				db = nil
 			} else {
 				log.Println("Connected to PostgreSQL database.")
-				createTable()
+				createTables()
+				seedAdmin()
 			}
 		}
 	} else {
@@ -70,22 +98,67 @@ func init() {
 	}
 }
 
-func createTable() {
-	query := `
-	CREATE TABLE IF NOT EXISTS messages (
-		id SERIAL PRIMARY KEY,
-		name TEXT,
-		email TEXT,
-		phone TEXT,
-		company TEXT,
-		region TEXT,
-		country TEXT,
-		message TEXT,
-		time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-	);`
-	_, err := db.Exec(query)
+func createTables() {
+	queries := []string{
+		`CREATE TABLE IF NOT EXISTS users (
+			id SERIAL PRIMARY KEY,
+			username TEXT UNIQUE NOT NULL,
+			password_hash TEXT NOT NULL,
+			role TEXT DEFAULT 'user'
+		);`,
+		`CREATE TABLE IF NOT EXISTS messages (
+			id SERIAL PRIMARY KEY,
+			name TEXT,
+			email TEXT,
+			phone TEXT,
+			company TEXT,
+			region TEXT,
+			country TEXT,
+			message TEXT,
+			time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+		);`,
+		`CREATE TABLE IF NOT EXISTS internal_emails (
+			id SERIAL PRIMARY KEY,
+			sender TEXT,
+			subject TEXT,
+			content TEXT,
+			time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+		);`,
+		`CREATE TABLE IF NOT EXISTS chat_messages (
+			id SERIAL PRIMARY KEY,
+			sender TEXT,
+			message TEXT,
+			time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+		);`,
+	}
+	for _, q := range queries {
+		_, err := db.Exec(q)
+		if err != nil {
+			log.Fatalf("Failed to execute migration: %v", err)
+		}
+	}
+}
+
+func seedAdmin() {
+	var count int
+	err := db.QueryRow("SELECT COUNT(*) FROM users").Scan(&count)
 	if err != nil {
-		log.Fatalf("Failed to create messages table: %v", err)
+		log.Printf("Error checking users count: %v", err)
+		return
+	}
+
+	if count == 0 {
+		pass := os.Getenv("ADMIN_PASS")
+		if pass == "" {
+			pass = "suryavamsi"
+		}
+		hash, _ := bcrypt.GenerateFromPassword([]byte(pass), bcrypt.DefaultCost)
+		_, err = db.Exec("INSERT INTO users (username, password_hash, role) VALUES ($1, $2, $3)", adminUser, string(hash), "admin")
+		if err != nil {
+			log.Printf("Failed to seed admin: %v", err)
+		} else {
+			log.Println("Admin user seeded in database.")
+		}
 	}
 }
 
@@ -162,14 +235,33 @@ func handleLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Simple check against admin credentials
-	if creds.Username != adminUser || bcrypt.CompareHashAndPassword(adminHash, []byte(creds.Password)) != nil {
+	// Check against database users if DB is available
+	var storedHash string
+	var role string
+	authenticated := false
+
+	if db != nil {
+		err := db.QueryRow("SELECT password_hash, role FROM users WHERE username = $1", creds.Username).Scan(&storedHash, &role)
+		if err == nil {
+			if bcrypt.CompareHashAndPassword([]byte(storedHash), []byte(creds.Password)) == nil {
+				authenticated = true
+			}
+		}
+	} else {
+		// Fallback to Env-based Admin
+		if creds.Username == adminUser && bcrypt.CompareHashAndPassword(adminHash, []byte(creds.Password)) == nil {
+			authenticated = true
+			role = "admin"
+		}
+	}
+
+	if !authenticated {
 		log.Printf("Failed login attempt for user: %s", creds.Username)
 		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
 
-	log.Printf("Successful login for user: %s", creds.Username)
+	log.Printf("Successful login for user: %s (Role: %s)", creds.Username, role)
 
 	expirationTime := time.Now().Add(24 * time.Hour)
 	claims := &Claims{
@@ -302,13 +394,86 @@ func handleUpdateMessages(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-func main() {
-	fs := http.FileServer(http.Dir("."))
-	http.Handle("/", fs)
+func handleWS(w http.ResponseWriter, r *http.Request) {
+	conn, err := upgrader.Upgrade(w, r, nil)
+	if err != nil {
+		log.Printf("WS upgrade error: %v", err)
+		return
+	}
+	defer conn.Close()
 
+	mu.Lock()
+	clients[conn] = true
+	mu.Unlock()
+
+	for {
+		var msg ChatMessage
+		err := conn.ReadJSON(&msg)
+		if err != nil {
+			mu.Lock()
+			delete(clients, conn)
+			mu.Unlock()
+			break
+		}
+		msg.Time = time.Now()
+		broadcast <- msg
+	}
+}
+
+func handleMessages() {
+	for {
+		msg := <-broadcast
+		if db != nil {
+			db.Exec("INSERT INTO chat_messages (sender, message, time) VALUES ($1, $2, $3)", msg.Sender, msg.Message, msg.Time)
+		}
+		mu.Lock()
+		for client := range clients {
+			err := client.WriteJSON(msg)
+			if err != nil {
+				client.Close()
+				delete(clients, client)
+			}
+		}
+		mu.Unlock()
+	}
+}
+
+func handleGetInternalEmails(w http.ResponseWriter, r *http.Request) {
+	var emails []InternalEmail
+	if db != nil {
+		rows, err := db.Query("SELECT id, sender, subject, content, time FROM internal_emails ORDER BY time DESC LIMIT 20")
+		if err == nil {
+			defer rows.Close()
+			for rows.Next() {
+				var e InternalEmail
+				rows.Scan(&e.ID, &e.From, &e.Subject, &e.Content, &e.Time)
+				emails = append(emails, e)
+			}
+		}
+	}
+	json.NewEncoder(w).Encode(emails)
+}
+
+func main() {
+	go handleMessages()
+
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path == "/" {
+			http.ServeFile(w, r, "infoAiedge.html")
+			return
+		}
+		if r.URL.Path == "/nexus" {
+			http.ServeFile(w, r, "nexus_app.html")
+			return
+		}
+		http.FileServer(http.Dir(".")).ServeHTTP(w, r)
+	})
+
+	http.HandleFunc("/ws", handleWS)
 	http.HandleFunc("/api/login", handleLogin)
 	http.HandleFunc("/api/contact", handleContact)
 	http.HandleFunc("/api/messages", authenticate(handleGetMessages))
+	http.HandleFunc("/api/employee/emails", authenticate(handleGetInternalEmails))
 	http.HandleFunc("/api/messages/update", authenticate(handleUpdateMessages))
 
 	port := os.Getenv("PORT")

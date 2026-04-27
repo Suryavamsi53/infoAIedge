@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InfoAiedge | Nexus Platform</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-deep: #050506;
+            --bg-sidebar: #09090b;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --accent: #00f2fe;
+            --accent-gradient: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+            --accent-glow: rgba(0, 242, 254, 0.2);
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+            --border: rgba(255, 255, 255, 0.08);
+            --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* --- Sidebar Navigation --- */
+        .sidebar {
+            width: 280px;
+            background: var(--bg-sidebar);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            padding: 2rem 1.5rem;
+            z-index: 100;
+        }
+
+        .logo {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #fff;
+            text-decoration: none;
+            margin-bottom: 3.5rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .logo span { background: var(--accent-gradient); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+
+        .nav-list { list-style: none; flex: 1; }
+        .nav-item { margin-bottom: 0.6rem; }
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.9rem 1.2rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        .nav-link i { width: 22px; font-size: 1.1rem; }
+        .nav-link:hover { color: #fff; background: rgba(255,255,255,0.05); }
+        .nav-link.active {
+            background: var(--bg-card);
+            color: var(--accent);
+            box-shadow: inset 0 0 10px rgba(0, 242, 254, 0.05);
+            border: 1px solid rgba(0, 242, 254, 0.1);
+        }
+
+        /* --- Main Content Area --- */
+        .content-container {
+            flex: 1;
+            padding: 2.5rem 4%;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .view-section {
+            display: none;
+            animation: fadeIn 0.4s ease-out;
+        }
+        .view-section.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3.5rem;
+        }
+        .header h1 { font-family: 'Outfit', sans-serif; font-size: 2.2rem; font-weight: 700; }
+
+        /* --- Dashboard Module --- */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 1.8rem;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+        .stat-card p { color: var(--text-muted); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; margin-bottom: 0.5rem; }
+        .stat-card h2 { font-size: 2rem; font-family: 'Outfit', sans-serif; color: var(--accent); }
+
+        /* --- Email Module --- */
+        .email-app {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 2rem;
+            height: calc(100vh - 200px);
+        }
+        .email-sidebar {
+            border-right: 1px solid var(--border);
+            padding-right: 1.5rem;
+        }
+        .email-list {
+            list-style: none;
+            height: 100%;
+            overflow-y: auto;
+        }
+        .email-item {
+            padding: 1.25rem;
+            border-radius: 12px;
+            margin-bottom: 0.8rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .email-item:hover { border-color: var(--accent); }
+        .email-item h4 { font-size: 0.95rem; margin-bottom: 4px; }
+        .email-item p { font-size: 0.85rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        /* --- Chat Module --- */
+        .chat-app {
+            display: flex;
+            height: calc(100vh - 200px);
+            background: var(--bg-card);
+            border-radius: 24px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+        .chat-list {
+            width: 250px;
+            border-right: 1px solid var(--border);
+            padding: 1.5rem;
+        }
+        .chat-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+        }
+        .messages-pane { flex: 1; overflow-y: auto; margin-bottom: 2rem; }
+        .msg-bubble { margin-bottom: 1.2rem; max-width: 70%; padding: 1rem; border-radius: 16px; font-size: 0.95rem; }
+        .msg-in { background: rgba(255,255,255,0.05); align-self: flex-start; }
+        .msg-out { background: var(--accent); color: #000; align-self: flex-end; margin-left: auto; }
+
+        /* --- Hierarchy --- */
+        .tree-node {
+            padding: 1rem;
+            border-left: 2px solid var(--border);
+            margin-left: 1.5rem;
+            position: relative;
+        }
+        .tree-node::before {
+            content: '';
+            position: absolute;
+            left: -2px; top: 25px;
+            width: 15px; height: 2px;
+            background: var(--border);
+        }
+        .node-content {
+            background: var(--bg-card);
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            width: fit-content;
+            border: 1px solid var(--border);
+        }
+
+        /* --- Projects --- */
+        .project-board {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+        .board-col {
+            background: rgba(255,255,255,0.01);
+            padding: 1.5rem;
+            border-radius: 20px;
+        }
+        .task-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 1.2rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <a href="#" class="logo">INFO<span>AIEDGE</span></a>
+        
+        <nav class="nav-list">
+            <li class="nav-item">
+                <a class="nav-link active" onclick="switchSection('dashboard', this)">
+                    <i class="fas fa-grid-2"></i> Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" onclick="switchSection('mail', this)">
+                    <i class="fas fa-envelope"></i> Internal Mail
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" onclick="switchSection('chat', this)">
+                    <i class="fas fa-comments"></i> Team Chat
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" onclick="switchSection('hierarchy', this)">
+                    <i class="fas fa-sitemap"></i> Hierarchy
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" onclick="switchSection('projects', this)">
+                    <i class="fas fa-tasks"></i> Projects
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" onclick="switchSection('performance', this)">
+                    <i class="fas fa-chart-line"></i> Performance
+                </a>
+            </li>
+        </nav>
+
+        <div style="border-top: 1px solid var(--border); padding-top: 2rem; display: flex; align-items: center; gap: 1rem;">
+            <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--accent-gradient); display: flex; align-items: center; justify-content: center; color: #000; font-weight: 800;">S</div>
+            <div>
+                <p style="font-weight: 700; font-size: 0.9rem;">Suryavamsi</p>
+                <p style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">CEO @ InfoAiedge</p>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="content-container">
+
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="view-section active">
+            <div class="header">
+                <h1>Nexus Overview</h1>
+                <div style="color: var(--text-muted); font-weight: 500;">April 24, 2026</div>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <p>Total Emails</p>
+                    <h2>1,284</h2>
+                </div>
+                <div class="stat-card">
+                    <p>Open Tasks</p>
+                    <h2>42</h2>
+                </div>
+                <div class="stat-card">
+                    <p>Avg Latency</p>
+                    <h2>12ms</h2>
+                </div>
+                <div class="stat-card">
+                    <p>Active Nodes</p>
+                    <h2>18</h2>
+                </div>
+            </div>
+        </section>
+
+        <!-- Mail Section -->
+        <section id="mail" class="view-section">
+            <div class="header">
+                <h1>Internal Mail</h1>
+                <button class="btn btn-primary">Compose</button>
+            </div>
+            <div class="email-app">
+                <div class="email-sidebar">
+                    <div style="margin-bottom: 2rem;">
+                        <input type="text" placeholder="Search mail..." style="width: 100%; padding: 0.8rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; color: #fff;">
+                    </div>
+                    <ul class="email-list">
+                        <li class="email-item">
+                            <h4>Engineering Team</h4>
+                            <p>Update on Sentinel deployment...</p>
+                        </li>
+                        <li class="email-item">
+                            <h4>HR Nexus</h4>
+                            <p>New onboarding guidelines for Q2...</p>
+                        </li>
+                        <li class="email-item">
+                            <h4>SRE Bot</h4>
+                            <p>Warning: Memory spike in production-3...</p>
+                        </li>
+                    </ul>
+                </div>
+                <div style="background: var(--bg-card); border-radius: 20px; border: 1px solid var(--border); padding: 3rem; display: flex; align-items: center; justify-content: center; color: var(--text-muted);">
+                    Select an email to read
+                </div>
+            </div>
+        </section>
+
+        <!-- Chat Section -->
+        <section id="chat" class="view-section">
+            <div class="header">
+                <h1>Team Chat</h1>
+                <div style="display: flex; gap: 10px;">
+                    <span style="font-size: 0.8rem; color: var(--accent);"><i class="fas fa-circle" style="font-size: 0.5rem;"></i> #engineering active</span>
+                </div>
+            </div>
+            <div class="chat-app">
+                <div class="chat-list">
+                    <h4 style="color: var(--text-muted); margin-bottom: 1rem; font-size: 0.8rem; text-transform: uppercase;">Channels</h4>
+                    <p style="color: #fff; margin-bottom: 1rem; cursor: pointer;"># engineering</p>
+                    <p style="color: var(--text-muted); margin-bottom: 1rem; cursor: pointer;"># dev-ops</p>
+                    <h4 style="color: var(--text-muted); margin-bottom: 1rem; font-size: 0.8rem; text-transform: uppercase;">Direct</h4>
+                    <p style="color: var(--text-muted); margin-bottom: 1rem; cursor: pointer;">Alex</p>
+                    <p style="color: var(--text-muted); margin-bottom: 1rem; cursor: pointer;">SRE_Admin</p>
+                </div>
+                <div class="chat-main">
+                    <div class="messages-pane">
+                        <div class="msg-bubble msg-in"><strong>Lead Eng:</strong> Has anyone tested the Go binary on the new M3 cluster?</div>
+                        <div class="msg-bubble msg-out"><strong>You:</strong> Yes, running perfectly. 8% performance boost.</div>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" placeholder="Message #engineering..." style="flex: 1; padding: 1rem; background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 12px; color: #fff;">
+                        <button class="btn btn-primary"><i class="fas fa-paper-plane"></i></button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Hierarchy Section -->
+        <section id="hierarchy" class="view-section">
+            <div class="header">
+                <h1>Organization Structure</h1>
+            </div>
+            <div class="tree-container">
+                <div class="node-content" style="background: var(--accent-gradient); color: #000; font-weight: 800;">
+                    Suryavamsi - Founder & CEO
+                </div>
+                <div class="tree-node">
+                    <div class="node-content">Engineering Lead</div>
+                    <div class="tree-node">
+                        <div class="node-content">Senior Go Engineer</div>
+                    </div>
+                    <div class="tree-node">
+                        <div class="node-content">Cloud Architect</div>
+                    </div>
+                </div>
+                <div class="tree-node">
+                    <div class="node-content">Product Designer</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="view-section">
+            <div class="header">
+                <h1>Projects / Tasks</h1>
+                <button class="btn btn-primary">New Task</button>
+            </div>
+            <div class="project-board">
+                <div class="board-col">
+                    <h4 style="margin-bottom: 1.5rem; text-transform: uppercase; font-size: 0.8rem; color: var(--text-muted);">To Do</h4>
+                    <div class="task-card">Implementing WebSockets for Chat</div>
+                    <div class="task-card">Database migration to PSQL v16</div>
+                </div>
+                <div class="board-col">
+                    <h4 style="margin-bottom: 1.5rem; text-transform: uppercase; font-size: 0.8rem; color: var(--text-muted);">In Progress</h4>
+                    <div class="task-card">Nexus UI Re-design (Glass)</div>
+                </div>
+                <div class="board-col">
+                    <h4 style="margin-bottom: 1.5rem; text-transform: uppercase; font-size: 0.8rem; color: var(--text-muted);">Done</h4>
+                    <div class="task-card">Backend Seed Implementation</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Performance Section -->
+        <section id="performance" class="view-section">
+            <div class="header">
+                <h1>Performance Engine</h1>
+            </div>
+            <div class="grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                <div class="module-card" style="background: var(--bg-card); border: 1px solid var(--border); padding: 2rem; border-radius: 20px;">
+                    <h3>System Uptime</h3>
+                    <div style="height: 100px; display: flex; align-items: flex-end; gap: 4px; margin-top: 1rem;">
+                        <div style="flex:1; background: var(--accent); height: 80%; border-radius: 4px;"></div>
+                        <div style="flex:1; background: var(--accent); height: 90%; border-radius: 4px;"></div>
+                        <div style="flex:1; background: var(--accent); height: 85%; border-radius: 4px;"></div>
+                        <div style="flex:1; background: var(--accent); height: 95%; border-radius: 4px;"></div>
+                    </div>
+                </div>
+                <div class="module-card" style="background: var(--bg-card); border: 1px solid var(--border); padding: 2rem; border-radius: 20px;">
+                    <h3>Deployment Velocity</h3>
+                    <p style="font-size: 2rem; color: var(--accent); margin-top: 1rem;">24 Ships / Week</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        function switchSection(sectionId, el) {
+            // Remove active from all links and sections
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+            document.querySelectorAll('.view-section').forEach(section => section.classList.remove('active'));
+            
+            // Add active to current
+            el.classList.add('active');
+            document.getElementById(sectionId).classList.add('active');
+        }
+    </script>
+</body>
+</html>
