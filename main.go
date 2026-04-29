@@ -459,7 +459,7 @@ func main() {
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/" {
-			http.ServeFile(w, r, "infoAiedge.html")
+			http.ServeFile(w, r, "index.html")
 			return
 		}
 		if r.URL.Path == "/nexus" {

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surya Vamsi Vaggu | Cloud-Native Engineer</title>
+    <meta name="description" content="Portfolio of Surya Vamsi Vaggu, a Cloud-Native Engineer specializing in Go, Kubernetes, and AWS.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Outfit:wght@400;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.0/lucide.min.js"></script>
+</head>
+<body>
+    <nav class="glass-nav">
+        <div class="logo"><img src="logo.png" alt="SVV Logo" style="height: 60px; vertical-align: middle;"></div>
+        <ul class="nav-links">
+            <li><a href="#hero">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <section id="hero" class="hero-section">
+            <div class="glow-sphere"></div>
+            <div class="hero-content">
+                <h2 class="reveal-text">Hello, I'm</h2>
+                <h1 class="glitch-text" data-text="SURYA VAMSI VAGGU">SURYA VAMSI VAGGU</h1>
+                <p class="hero-subtitle">Engineering Scalable Cloud-Native Ecosystems</p>
+                <div class="hero-cta">
+                    <a href="#projects" class="btn primary-btn">View Projects</a>
+                    <a href="#contact" class="btn secondary-btn">Get In Touch</a>
+                </div>
+            </div>
+            <div class="scroll-indicator">
+                <div class="mouse"></div>
+            </div>
+        </section>
+
+        <section id="about" class="about-section glass-card-container">
+            <div class="section-header">
+                <h2>About Me</h2>
+                <div class="underline"></div>
+            </div>
+            <div class="about-grid">
+                <div class="about-text glass-card">
+                    <p>I am a passionate <strong>Cloud-Native Engineer</strong> dedicated to building high-performance, distributed systems. My expertise lies in bridging the gap between clean code and robust infrastructure.</p>
+                    <p>From designing <strong>Go-based microservices</strong> to orchestrating <strong>Kubernetes</strong> clusters on AWS, I focus on scalability, observability, and developer experience.</p>
+                </div>
+                <div class="about-stats glass-card">
+                    <div class="stat-item">
+                        <span class="stat-num">99.9%</span>
+                        <span class="stat-label">Uptime Focused</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-num">Go</span>
+                        <span class="stat-label">Primary Language</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-num">Infra</span>
+                        <span class="stat-label">As Code</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="projects" class="projects-section">
+            <div class="section-header">
+                <h2>Featured Projects</h2>
+                <div class="underline"></div>
+            </div>
+            <div class="projects-grid">
+                <!-- Project 1 -->
+                <div class="project-card glass-card">
+                    <div class="project-image" id="project1-img">
+                        <i data-lucide="cloud" class="project-bg-icon"></i>
+                    </div>
+                    <div class="project-info">
+                        <h3>Cloud-Native REST API</h3>
+                        <p>A production-ready API platform with Go, featuring multi-stage Docker builds and HPA-driven Kubernetes orchestration.</p>
+                        <div class="tags">
+                            <span>Go</span>
+                            <span>AWS S3</span>
+                            <span>K8s</span>
+                            <span>Terraform</span>
+                        </div>
+                        <a href="#" class="project-link">Deep Dive →</a>
+                    </div>
+                </div>
+                
+                <!-- Project 2 -->
+                <div class="project-card glass-card">
+                    <div class="project-image" id="project2-img">
+                        <i data-lucide="shield-check" class="project-bg-icon"></i>
+                    </div>
+                    <div class="project-info">
+                        <h3>Go API Gateway</h3>
+                        <p>High-performance reverse proxy with Token Bucket rate limiting, Redis caching, and Prometheus monitoring.</p>
+                        <div class="tags">
+                            <span>Go</span>
+                            <span>Redis</span>
+                            <span>Prometheus</span>
+                            <span>Docker</span>
+                        </div>
+                        <a href="#" class="project-link">View Repo →</a>
+                    </div>
+                </div>
+
+                <!-- Project 3 -->
+                <div class="project-card glass-card">
+                    <div class="project-image" id="project3-img">
+                        <i data-lucide="activity" class="project-bg-icon"></i>
+                    </div>
+                    <div class="project-info">
+                        <h3>SRE Dashboard</h3>
+                        <p>Real-time observability platform for monitoring microservices health, latency, and incident response.</p>
+                        <div class="tags">
+                            <span>React</span>
+                            <span>Go</span>
+                            <span>Prometheus</span>
+                            <span>Grafana</span>
+                        </div>
+                        <a href="#" class="project-link">Case Study →</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="skills" class="skills-section glass-card-container">
+            <div class="section-header">
+                <h2>Technical Arsenal</h2>
+                <div class="underline"></div>
+            </div>
+            <div class="skills-grid">
+                <div class="skill-category glass-card">
+                    <h3>Backend</h3>
+                    <div class="skill-tags">
+                        <span>Go (Golang)</span>
+                        <span>Python</span>
+                        <span>Node.js</span>
+                        <span>PostgreSQL</span>
+                        <span>Redis</span>
+                    </div>
+                </div>
+                <div class="skill-category glass-card">
+                    <h3>Cloud & DevOps</h3>
+                    <div class="skill-tags">
+                        <span>AWS</span>
+                        <span>Kubernetes</span>
+                        <span>Docker</span>
+                        <span>Terraform</span>
+                        <span>GitHub Actions</span>
+                    </div>
+                </div>
+                <div class="skill-category glass-card">
+                    <h3>Observability</h3>
+                    <div class="skill-tags">
+                        <span>Prometheus</span>
+                        <span>Grafana</span>
+                        <span>ELK Stack</span>
+                        <span>OpenTelemetry</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="contact-section">
+            <div class="section-header">
+                <h2>Let's Connect</h2>
+                <div class="underline"></div>
+            </div>
+            <div class="contact-container glass-card">
+                <form id="contact-form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="name">Full Name</label>
+                            <input type="text" id="name" required placeholder="John Doe">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" required placeholder="john@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" placeholder="+1 234 567 890">
+                        </div>
+                        <div class="form-group">
+                            <label for="company">Company</label>
+                            <input type="text" id="company" placeholder="Acme Inc.">
+                        </div>
+                        <div class="form-group">
+                            <label for="country">Country</label>
+                            <input type="text" id="country" required placeholder="United States">
+                        </div>
+                        <div class="form-group">
+                            <label for="region">Region / State</label>
+                            <input type="text" id="region" required placeholder="California">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Your Message</label>
+                        <textarea id="message" rows="5" required placeholder="Describe your project or inquiry..."></textarea>
+                    </div>
+                    <button type="submit" class="btn primary-btn submit-btn">Send Transmission</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Surya Vamsi Vaggu. Built with Precision. | <a href="login.html" style="color: inherit; text-decoration: none; opacity: 0.5;">Admin</a></p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
